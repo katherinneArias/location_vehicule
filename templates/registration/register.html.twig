@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="mb-4">Créer un compte</h1>
+
+        {% if app.user %}
+            <div class="alert alert-info">
+                Vous êtes déjà connecté en tant que {{ app.user.userIdentifier }}.
+                <a href="{{ path('app_logout') }}" class="btn btn-sm btn-danger ms-2">Déconnexion</a>
+            </div>
+        {% endif %}
+
+        {{ form_start(registrationForm) }}
+
+        <div class="mb-3">
+            {{ form_label(registrationForm.nom) }}
+            {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(registrationForm.nom) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(registrationForm.prenom) }}
+            {{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(registrationForm.prenom) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(registrationForm.email) }}
+            {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(registrationForm.email) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(registrationForm.telephone) }}
+            {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(registrationForm.telephone) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(registrationForm.plainPassword) }}
+            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(registrationForm.plainPassword) }}
+        </div>
+
+        <button type="submit" class="btn btn-success">S'inscrire</button>
+        {{ form_end(registrationForm) }}
+    </div>
+{% endblock %}

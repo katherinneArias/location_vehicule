@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un véhicule{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h1>Modifier un véhicule</h1>
+
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        {{ form_row(form.marque) }}
+        {{ form_row(form.modele) }}
+        {{ form_row(form.immatriculation) }}
+        {{ form_row(form.prixParJour) }}
+        {{ form_row(form.couleur) }}
+        {{ form_row(form.poids) }}
+        {{ form_row(form.disponible) }}
+        {{ form_row(form.dateAjout) }}
+        {{ form_row(form.photo) }}
+        
+        <button class="btn btn-success mt-3">Mettre à jour</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('vehicule_index') }}" class="btn btn-link mt-3">Retour à la liste</a>
+</div>
+{% endblock %}

@@ -14,6 +14,22 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-    </body>
+    <nav style="background: #eee; padding: 10px;">
+        {% if app.user %}
+            Conectado como <strong>{{ app.user.email }}</strong>
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                (Administrador)
+            {% else %}
+                (Cliente)
+            {% endif %}
+            <a href="{{ path('app_logout') }}" style="margin-left: 10px;">Cerrar sesión</a>
+        {% else %}
+            <a href="{{ path('app_login') }}">Iniciar sesión</a>
+            <a href="{{ path('app_register') }}" style="margin-left: 10px;">Registrarse</a>
+        {% endif %}
+    </nav>
+
+    {% block body %}{% endblock %}
+</body>
+
 </html>
