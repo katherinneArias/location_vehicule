@@ -17,22 +17,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $nom;
+    private ?string $nom = null;
 
     #[ORM\Column(type: 'string', length: 100)]
-    private $prenom;
+    private ?string $prenom = null;
 
     #[ORM\Column(type: 'string', length: 100, unique: true)]
-    private $email;
+    private ?string $email = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $motDePasse;
+    private string $password;
 
     #[ORM\Column(type: 'string', length: 20)]
-    private $telephone;
+    private ?string $telephone = null;
 
     #[ORM\Column(type: 'json')]
     private array $roles = [];
@@ -83,17 +83,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMotDePasse(): ?string
-    {
-        return $this->motDePasse;
-    }
-
-    public function setMotDePasse(string $motDePasse): self
-    {
-        $this->motDePasse = $motDePasse;
-        return $this;
-    }
-
     public function getTelephone(): ?string
     {
         return $this->telephone;
@@ -134,18 +123,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    // Métodos de UserInterface y PasswordAuthenticatedUserInterface
-
     public function getRoles(): array
     {
         $roles = $this->roles;
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
+
         return $this;
     }
 
@@ -156,22 +145,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getPassword(): string
     {
-        return $this->motDePasse;
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
     }
 
     public function eraseCredentials()
     {
-        // Aquí puedes limpiar datos temporales si los tienes
+        // Clear temporary sensitive data if needed
+    }
+
+    // Optional for compatibility
+    public function getUsername(): string
+    {
+        return $this->email;
     }
 
     public function getSalt(): ?string
     {
         return null;
-    }
-
-    // Compatibilidad con versiones anteriores de Symfony
-    public function getUsername(): string
-    {
-        return $this->email;
     }
 }
