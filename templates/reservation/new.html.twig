@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle réservation{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Faire une réservation</h1>
+
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.dateDebut) }}
+            {{ form_widget(form.dateDebut, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.dateDebut) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.dateFin) }}
+            {{ form_widget(form.dateFin, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.dateFin) }}
+        </div>
+
+        <button class="btn btn-primary">Réserver</button>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

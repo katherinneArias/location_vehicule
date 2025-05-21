@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 class Reservation
@@ -11,21 +12,26 @@ class Reservation
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'datetime')]
-    private $dateDebut;
+    #[Assert\NotNull]
+    private ?\DateTimeInterface $dateDebut = null;
 
     #[ORM\Column(type: 'datetime')]
-    private $dateFin;
+    #[Assert\NotNull]
+    #[Assert\GreaterThan(propertyPath: 'dateDebut', message: 'La date de fin doit être après la date de début.')]
+    private ?\DateTimeInterface $dateFin = null;
 
     #[ORM\Column(type: 'float')]
-    private $prixTotal;
+    private ?float $prixTotal = 0;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Vehicule $vehicule = null;
 
     #[ORM\ManyToOne(inversedBy: 'reservations')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?User $utilisateur = null;
 
     public function getId(): ?int
