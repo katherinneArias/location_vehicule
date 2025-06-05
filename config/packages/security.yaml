@@ -24,9 +24,17 @@ security:
                 target: app_login
 
     access_control:
+        # Accès public
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/, roles: ROLE_USER }
+
+        # Accès restreint par rôle
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/reservation, roles: ROLE_CLIENT }
+        - { path: ^/vehicule, roles: [ROLE_CLIENT, ROLE_ADMIN] }
+
+        # Accès par défaut
+        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
     security:

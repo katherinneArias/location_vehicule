@@ -1,0 +1,91 @@
+body {
+    background-color: white;
+    color: #333;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* === NAVBAR === */
+.navbar,
+.main-nav {
+    background-color: #b30000;
+    color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a,
+.main-nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin: 0 15px;
+    transition: color 0.3s ease;
+}
+
+.navbar a:hover,
+.main-nav a:hover {
+    text-decoration: underline;
+    color: #ffcccc;
+}
+
+/* === HERO SECTION === */
+.hero {
+    background-image: url('/uploads/image/oldtimer-1197800_1280.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    text-shadow: 2px 2px 4px #000;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.hero p {
+    font-size: 1.3rem;
+    margin-bottom: 2rem;
+}
+
+.hero .btn {
+    background-color: #fff;
+    color: #b30000;
+    font-weight: bold;
+    padding: 12px 25px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.hero .btn:hover {
+    background-color: #b30000;
+    color: #fff;
+}
+
+/* === CONTENEDOR GENERAL === */
+.container {
+    margin: 2rem auto;
+    max-width: 1000px;
+    padding: 20px;
+    text-align: center;
+}
+
+/* === FOOTER (opcional) === */
+.footer {
+    background-color: #222;
+    color: #ddd;
+    text-align: center;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+}
