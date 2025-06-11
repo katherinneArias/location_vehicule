@@ -1,41 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-    
+    <title>{% block title %}Bienvenue sur Location Véhicule{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
-
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
-    {% endblock %}
 </head>
 <body>
-    <nav class="main-nav">
-        {% if app.user %}
-            Conectado como <strong>{{ app.user.email }}</strong>
-            {% if 'ROLE_ADMIN' in app.user.roles %}
-                (Administrador)
-                <a href="{{ path('app_reservation_index') }}">Reservas</a>
-                <a href="{{ path('app_vehicle_index') }}">Vehículos</a>
-            {% else %}
-                (Cliente)
-                <a href="{{ path('app_reservation_index') }}">Mis Reservas</a>
-            {% endif %}
-            <a href="{{ path('app_logout') }}">Cerrar sesión</a>
-        {% else %}
-            <a href="{{ path('app_login') }}">Iniciar sesión</a>
-            <a href="{{ path('app_register') }}">Registrarse</a>
-        {% endif %}
-    </nav>
 
-    <div class="container">
-        {% block body %}{% endblock %}
-    </div>
+<nav class="main-nav">
+    <a href="{{ path('homepage') }}">Accueil</a>
+
+    {% if app.user %}
+        Conectado como <strong>{{ app.user.email }}</strong>
+        {% if 'ROLE_ADMIN' in app.user.roles %}
+            (Administrador)
+            <a href="{{ path('vehicule_index') }}">Gestionar Vehículos</a>
+            <a href="{{ path('app_reservation_index') }}">Reservas</a>
+        {% elseif 'ROLE_CLIENT' in app.user.roles %}
+            (Cliente)
+            <a href="{{ path('vehicule_index') }}">Ver Vehículos</a>
+            <a href="{{ path('app_reservation_index') }}">Mis Reservas</a>
+        {% endif %}
+        <a href="{{ path('app_logout') }}">Cerrar sesión</a>
+    {% else %}
+        <a href="{{ path('app_login') }}">Iniciar sesión</a>
+        <a href="{{ path('app_register') }}">Registrarse</a>
+    {% endif %}
+</nav>
+
+<div class="container">
+    {% block body %}{% endblock %}
+</div>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
+{% endblock %}
 </body>
 </html>

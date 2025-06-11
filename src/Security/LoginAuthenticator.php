@@ -50,20 +50,18 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // Redirigir según el rol
         $user = $token->getUser();
         $roles = $user->getRoles();
 
         if (in_array('ROLE_ADMIN', $roles)) {
-            return new RedirectResponse($this->urlGenerator->generate('admin_dashboard'));
+            return new RedirectResponse($this->urlGenerator->generate('vehicule_index'));
         }
 
         if (in_array('ROLE_CLIENT', $roles)) {
             return new RedirectResponse($this->urlGenerator->generate('app_reservation_index'));
         }
 
-        // Por defecto
-        return new RedirectResponse($this->urlGenerator->generate('home'));
+        return new RedirectResponse($this->urlGenerator->generate('app_home'));
     }
 
     protected function getLoginUrl(Request $request): string

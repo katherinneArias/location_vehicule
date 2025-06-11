@@ -6,7 +6,10 @@
 <div class="container mt-4">
     <h1>Liste des véhicules</h1>
 
-    <a href="{{ path('vehicule_new') }}" class="btn btn-success mb-3">Ajouter un véhicule</a>
+    {# Solo los administradores pueden agregar vehículos #}
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('vehicule_new') }}" class="btn btn-success mb-3">Ajouter un véhicule</a>
+    {% endif %}
 
     <table class="table table-bordered">
         <thead>
@@ -37,18 +40,24 @@
                         {% endif %}
                     </td>
                     <td>
-    {% if vehicule.photo %}
-        <img src="{{ asset('uploads/image/' ~ vehicule.photo) }}" width="100" alt="photo">
-    {% else %}
-        Aucune image
-    {% endif %}
-</td>
+                        {% if vehicule.photo %}
+                            <img src="{{ asset('uploads/image/' ~ vehicule.photo) }}" width="100" alt="photo">
+                        {% else %}
+                            Aucune image
+                        {% endif %}
+                    </td>
                     <td>
-                        <a href="{{ path('vehicule_edit', {id: vehicule.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
-                        <form method="post" action="{{ path('vehicule_delete', {id: vehicule.id}) }}" style="display:inline-block;" onsubmit="return confirm('Voulez-vous vraiment supprimer ce véhicule ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vehicule.id) }}">
-                            <button class="btn btn-sm btn-danger">Supprimer</button>
-                        </form>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('vehicule_edit', {id: vehicule.id}) }}" class="btn btn-sm btn-primary">Modifier</a>
+                            <form method="post" action="{{ path('vehicule_delete', {id: vehicule.id}) }}" style="display:inline-block;" onsubmit="return confirm('Voulez-vous vraiment supprimer ce véhicule ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ vehicule.id) }}">
+                                <button class="btn btn-sm btn-danger">Supprimer</button>
+                            </form>
+                        {% elseif is_granted('ROLE_CLIENT') and vehicule.disponible %}
+                            <a href="{{ path('app_reservation_new', {'vehicule': vehicule.id}) }}" class="btn btn-sm btn-warning">Réserver</a>
+                        {% else %}
+                            <span class="text-muted">Indisponible</span>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}

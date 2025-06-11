@@ -5,7 +5,6 @@ namespace App\Form;
 use App\Entity\Reservation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,9 +20,9 @@ class ReservationType extends AbstractType
             ->add('dateFin', DateTimeType::class, [
                 'widget' => 'single_text',
                 'label' => 'Date de fin',
-            ])
-            // 'prixTotal', 'vehicule', 'utilisateur' serán gestionados automáticamente en el controlador
-        ;
+            ]);
+            // No se incluye 'vehicule' ni 'utilisateur' aquí porque se asignan desde el controlador
+            // Tampoco 'prixTotal', porque se calcula automáticamente
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bienvenue chez Location Véhicule{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="hero" style="height: 75vh;">
+    <div class="hero-content">
+        <h1>Location Véhicule</h1>
+        <p>Votre partenaire de confiance pour louer des voitures de qualité.</p>
+        <a href="{{ path('app_login') }}" class="btn">Connexion</a>
+        <a href="{{ path('app_register') }}" class="btn btn-secondary">Créer un compte</a>
+    </div>
+</div>
+
+<div class="container">
+    <h2>À propos de nous</h2>
+    <p>
+        Location Véhicule est une entreprise spécialisée dans la location de voitures de luxe, sportives et utilitaires.
+        Notre mission est de vous offrir un service simple, rapide et fiable.
+    </p>
+
+    <img src="{{ asset('uploads/image/company.jpg') }}" alt="Notre entreprise" style="max-width: 100%; margin-top: 20px;">
+</div>
+{% endblock %}

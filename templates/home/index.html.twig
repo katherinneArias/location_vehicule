@@ -1,24 +1,29 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bienvenue sur Location Véhicule{% endblock %}
+{% block title %}Bienvenue chez Location Véhicule{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+{% endblock %}
 
 {% block body %}
-<div class="hero">
+<div class="hero" style="background-image: url('{{ asset('uploads/image/oldtimer-1197800_1280.jpg') }}'); background-size: cover; background-position: center; height: 60vh; display: flex; align-items: center; justify-content: center; color: white; text-shadow: 2px 2px 4px black;">
     <div class="hero-content">
-        <h1>Bienvenue sur <span class="highlight">Location Véhicule</span></h1>
-        <p>Réservez votre voiture idéale dès aujourd'hui</p>
-        {% if is_granted('ROLE_CLIENT') %}
-            <a href="{{ path('app_reservation_index') }}" class="btn">Mes Réservations</a>
-        {% elseif is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_home') }}" class="btn">Gérer les véhicules</a>
+        <h1 style="font-size: 3rem;">Location Véhicule</h1>
+        <p>Votre partenaire de confiance pour la location de voitures de luxe, sportives et utilitaires</p>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('vehicule_index') }}" class="btn">Gérer les véhicules</a>
+        {% elseif is_granted('ROLE_CLIENT') %}
+            <a href="{{ path('vehicule_index') }}" class="btn">Réserver un véhicule</a>
         {% else %}
-            <a href="{{ path('app_login') }}" class="btn">Connexion</a>
+            <a href="{{ path('app_login') }}" class="btn">Se connecter</a>
         {% endif %}
     </div>
 </div>
 
 <div class="container">
     <h2>Nos services</h2>
-    <p>Location de voitures de luxe, sport et utilitaires.</p>
+    <p>Nous proposons un large choix de véhicules pour répondre à tous vos besoins. Réservez dès maintenant et profitez d’un service rapide et professionnel.</p>
 </div>
 {% endblock %}

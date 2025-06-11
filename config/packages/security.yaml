@@ -24,17 +24,22 @@ security:
                 target: app_login
 
     access_control:
-        # Accès public
+        # Páginas públicas
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/home, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
 
-        # Accès restreint par rôle
+        # Rutas específicas por rol
         - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/reservation, roles: ROLE_CLIENT }
-        - { path: ^/vehicule, roles: [ROLE_CLIENT, ROLE_ADMIN] }
+        - { path: ^/vehicule/new, roles: ROLE_ADMIN }
+        - { path: ^/vehicule/\d+/edit, roles: ROLE_ADMIN }
+        - { path: ^/vehicule/\d+$, roles: ROLE_ADMIN }
 
-        # Accès par défaut
-        - { path: ^/, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reservation, roles: IS_AUTHENTICATED_FULLY }
+
+        # Por defecto, acceso solo a usuarios autenticados
+        - { path: ^/, roles: ROLE_USER }
 
 when@test:
     security:
