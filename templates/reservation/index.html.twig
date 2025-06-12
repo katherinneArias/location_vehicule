@@ -21,7 +21,11 @@
             <tbody>
                 {% for reservation in reservations %}
                     <tr>
-                        <td>{{ reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele }}</td>
+                        <td>
+                            <a href="{{ path('vehicule_show', { id: reservation.vehicule.id }) }}">
+                                {{ reservation.vehicule.marque ~ ' ' ~ reservation.vehicule.modele }}
+                            </a>
+                        </td>
                         <td>{{ reservation.dateDebut|date('d/m/Y H:i') }}</td>
                         <td>{{ reservation.dateFin|date('d/m/Y H:i') }}</td>
                         <td>{{ reservation.prixTotal }} €</td>

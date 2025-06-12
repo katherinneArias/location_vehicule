@@ -3,14 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\Vehicule;
+use App\Entity\Commentaire;
 use App\Form\VehiculeType;
+use App\Form\CommentaireType;
 use App\Repository\VehiculeRepository;
+use App\Repository\CommentaireRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
@@ -69,7 +72,6 @@ class VehiculeController extends AbstractController
     public function edit(int $id, Request $request, VehiculeRepository $vehiculeRepository, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $vehicule = $vehiculeRepository->find($id);
-
         if (!$vehicule) {
             throw $this->createNotFoundException('Véhicule non trouvé.');
         }
@@ -98,11 +100,39 @@ class VehiculeController extends AbstractController
             }
 
             $em->flush();
-
             return $this->redirectToRoute('vehicule_index');
         }
 
         return $this->render('vehicule/edit.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/{id}', name: 'vehicule_show', methods: ['GET', 'POST'])]
+    public function show(
+        Vehicule $vehicule,
+        Request $request,
+        EntityManagerInterface $em
+    ): Response {
+        $commentaire = new Commentaire();
+        $commentaire->setVehicule($vehicule);
+        $commentaire->setAuteur($this->getUser());
+
+        $form = $this->createForm(CommentaireType::class, $commentaire);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $commentaire->setDatePublication(new \DateTimeImmutable());
+            $em->persist($commentaire);
+            $em->flush();
+
+            $this->addFlash('success', 'Commentaire ajouté.');
+            return $this->redirectToRoute('vehicule_show', ['id' => $vehicule->getId()]);
+        }
+
+        return $this->render('vehicule/show.html.twig', [
+            'vehicule' => $vehicule,
+            'commentaires' => $vehicule->getCommentaires(),
             'form' => $form->createView(),
         ]);
     }
@@ -119,3 +149,4 @@ class VehiculeController extends AbstractController
         return $this->redirectToRoute('vehicule_index');
     }
 }
+

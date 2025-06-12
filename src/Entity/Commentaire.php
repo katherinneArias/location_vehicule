@@ -11,22 +11,24 @@ class Commentaire
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
-    private $contenu;
+    private ?string $contenu = null;
 
     #[ORM\Column(type: 'integer')]
-    private $note;
+    private ?int $note = null;
 
     #[ORM\Column(type: 'datetime')]
-    private $datePublication;
+    private ?\DateTimeInterface $datePublication = null;
 
-    #[ORM\ManyToOne(inversedBy: 'commentaires')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $auteur = null;
+
+    #[ORM\ManyToOne(targetEntity: Vehicule::class, inversedBy: 'commentaires')]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Vehicule $vehicule = null;
-
-    #[ORM\ManyToOne(inversedBy: 'commentaires')]
-    private ?User $utilisateur = null;
 
     public function getId(): ?int
     {
@@ -60,9 +62,20 @@ class Commentaire
         return $this->datePublication;
     }
 
-    public function setDatePublication(\DateTimeInterface $datePublication): self
+    public function setDatePublication(\DateTimeInterface $date): self
     {
-        $this->datePublication = $datePublication;
+        $this->datePublication = $date;
+        return $this;
+    }
+
+    public function getAuteur(): ?User
+    {
+        return $this->auteur;
+    }
+
+    public function setAuteur(?User $auteur): self
+    {
+        $this->auteur = $auteur;
         return $this;
     }
 
@@ -74,17 +87,6 @@ class Commentaire
     public function setVehicule(?Vehicule $vehicule): self
     {
         $this->vehicule = $vehicule;
-        return $this;
-    }
-
-    public function getUtilisateur(): ?User
-    {
-        return $this->utilisateur;
-    }
-
-    public function setUtilisateur(?User $utilisateur): self
-    {
-        $this->utilisateur = $utilisateur;
         return $this;
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VehiculeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VehiculeRepository::class)]
@@ -10,7 +12,7 @@ class Vehicule
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -22,23 +24,31 @@ class Vehicule
     #[ORM\Column(length: 255)]
     private ?string $immatriculation = null;
 
-    #[ORM\Column(type: "float")]
+    #[ORM\Column(type: 'float')]
     private ?float $prixParJour = null;
 
     #[ORM\Column(length: 255)]
     private ?string $couleur = null;
 
-    #[ORM\Column(type: "float")]
+    #[ORM\Column(type: 'float')]
     private ?float $poids = null;
 
-    #[ORM\Column(type: "boolean")]
+    #[ORM\Column(type: 'boolean')]
     private ?bool $disponible = false;
 
-    #[ORM\Column(type: "datetime_immutable", nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $dateAjout = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $photo = null;
+
+    #[ORM\OneToMany(mappedBy: 'vehicule', targetEntity: Commentaire::class, orphanRemoval: true)]
+    private Collection $commentaires;
+
+    public function __construct()
+    {
+        $this->commentaires = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -50,7 +60,7 @@ class Vehicule
         return $this->marque;
     }
 
-    public function setMarque(string $marque): static
+    public function setMarque(string $marque): self
     {
         $this->marque = $marque;
         return $this;
@@ -61,7 +71,7 @@ class Vehicule
         return $this->modele;
     }
 
-    public function setModele(string $modele): static
+    public function setModele(string $modele): self
     {
         $this->modele = $modele;
         return $this;
@@ -72,7 +82,7 @@ class Vehicule
         return $this->immatriculation;
     }
 
-    public function setImmatriculation(string $immatriculation): static
+    public function setImmatriculation(string $immatriculation): self
     {
         $this->immatriculation = $immatriculation;
         return $this;
@@ -83,7 +93,7 @@ class Vehicule
         return $this->prixParJour;
     }
 
-    public function setPrixParJour(float $prixParJour): static
+    public function setPrixParJour(float $prixParJour): self
     {
         $this->prixParJour = $prixParJour;
         return $this;
@@ -94,7 +104,7 @@ class Vehicule
         return $this->couleur;
     }
 
-    public function setCouleur(string $couleur): static
+    public function setCouleur(string $couleur): self
     {
         $this->couleur = $couleur;
         return $this;
@@ -105,7 +115,7 @@ class Vehicule
         return $this->poids;
     }
 
-    public function setPoids(float $poids): static
+    public function setPoids(float $poids): self
     {
         $this->poids = $poids;
         return $this;
@@ -116,7 +126,7 @@ class Vehicule
         return $this->disponible;
     }
 
-    public function setDisponible(bool $disponible): static
+    public function setDisponible(bool $disponible): self
     {
         $this->disponible = $disponible;
         return $this;
@@ -127,7 +137,7 @@ class Vehicule
         return $this->dateAjout;
     }
 
-    public function setDateAjout(?\DateTimeImmutable $dateAjout): static
+    public function setDateAjout(?\DateTimeImmutable $dateAjout): self
     {
         $this->dateAjout = $dateAjout;
         return $this;
@@ -138,9 +148,39 @@ class Vehicule
         return $this->photo;
     }
 
-    public function setPhoto(?string $photo): static
+    public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Commentaire>
+     */
+    public function getCommentaires(): Collection
+    {
+        return $this->commentaires;
+    }
+
+    public function addCommentaire(Commentaire $commentaire): self
+    {
+        if (!$this->commentaires->contains($commentaire)) {
+            $this->commentaires[] = $commentaire;
+            $commentaire->setVehicule($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCommentaire(Commentaire $commentaire): self
+    {
+        if ($this->commentaires->removeElement($commentaire)) {
+            // Set the owning side to null (unless already changed)
+            if ($commentaire->getVehicule() === $this) {
+                $commentaire->setVehicule(null);
+            }
+        }
+
         return $this;
     }
 }

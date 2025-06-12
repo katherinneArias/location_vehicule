@@ -34,7 +34,7 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/vehicule/new, roles: ROLE_ADMIN }
         - { path: ^/vehicule/\d+/edit, roles: ROLE_ADMIN }
-        - { path: ^/vehicule/\d+$, roles: ROLE_ADMIN }
+        - { path: ^/vehicule/\d+$, roles: [ROLE_ADMIN, ROLE_CLIENT] }
 
         - { path: ^/reservation, roles: IS_AUTHENTICATED_FULLY }
 

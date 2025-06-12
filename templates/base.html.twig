@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>{% block title %}Bienvenue sur Location Véhicule{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}">
 
@@ -14,25 +13,47 @@
 </head>
 <body>
 
-<nav class="main-nav">
-    <a href="{{ path('homepage') }}">Accueil</a>
+<nav class="main-nav" style="display: flex; justify-content: space-between; align-items: center; background-color: #b20000; padding: 10px; color: white;">
+    <!-- Menú Izquierdo -->
+    <div style="display: flex; gap: 15px;">
+        <a href="{{ path('homepage') }}" style="color: white;">Accueil</a>
+        <a href="{{ path('vehicule_index') }}" style="color: white;">
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                Gestion Véhicules
+            {% else %}
+                Véhicules
+            {% endif %}
+        </a>
+        <a href="{{ path('app_reservation_index') }}" style="color: white;">
+            {% if 'ROLE_ADMIN' in app.user.roles %}
+                ReservES
+            {% else %}
+                Mes Reservations
+            {% endif %}
+        </a>
+        {# Comentarios: visible para todos los usuarios autenticados #}
+        <a href="#" style="color: white;">Commentaires</a>
+    </div>
 
-    {% if app.user %}
-        Conectado como <strong>{{ app.user.email }}</strong>
-        {% if 'ROLE_ADMIN' in app.user.roles %}
-            (Administrador)
-            <a href="{{ path('vehicule_index') }}">Gestionar Vehículos</a>
-            <a href="{{ path('app_reservation_index') }}">Reservas</a>
-        {% elseif 'ROLE_CLIENT' in app.user.roles %}
-            (Cliente)
-            <a href="{{ path('vehicule_index') }}">Ver Vehículos</a>
-            <a href="{{ path('app_reservation_index') }}">Mis Reservas</a>
+    <!-- Info Usuario Derecha -->
+    <div style="display: flex; gap: 15px; align-items: center;">
+        {% if app.user %}
+            <span>
+                Connecte commme <strong>{{ app.user.email }}</strong>
+                (
+                {% if 'ROLE_ADMIN' in app.user.roles %}
+                    Admin
+                {% elseif 'ROLE_CLIENT' in app.user.roles %}
+                    Client
+                {% endif %}
+                )
+            </span>
+            <a href="{{ path('app_logout') }}" style="color: white;">Deconnexion</a>
+        {% else %}
+            <a href="{{ path('app_login') }}" style="color: white;">Connexion</a>
+            <a href="{{ path('app_register') }}" style="color: white;">Inscription</a>
         {% endif %}
-        <a href="{{ path('app_logout') }}">Cerrar sesión</a>
-    {% else %}
-        <a href="{{ path('app_login') }}">Iniciar sesión</a>
-        <a href="{{ path('app_register') }}">Registrarse</a>
-    {% endif %}
+    </div>
 </nav>
 
 <div class="container">
