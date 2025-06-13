@@ -40,7 +40,7 @@ class ReservationController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         VehiculeRepository $vehiculeRepository,
-        int $vehicule = null
+        ?int $vehicule = null
     ): Response {
         $reservation = new Reservation();
         $reservation->setUtilisateur($this->getUser());
@@ -59,7 +59,15 @@ class ReservationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $diff = $reservation->getDateDebut()->diff($reservation->getDateFin())->days;
             $prixParJour = $reservation->getVehicule()->getPrixParJour();
-            $reservation->setPrixTotal($diff * $prixParJour);
+
+            $prixTotal = $diff * $prixParJour;
+
+            if ($diff > 10) {
+                $prixTotal *= 0.9;
+                $this->addFlash('info', 'Un descuento del 10% ha sido aplicado por una reserva de más de 10 días.');
+            }
+
+            $reservation->setPrixTotal($prixTotal);
 
             $em->persist($reservation);
             $em->flush();
@@ -69,6 +77,7 @@ class ReservationController extends AbstractController
 
         return $this->render('reservation/new.html.twig', [
             'form' => $form->createView(),
+            'reservation' => $reservation
         ]);
     }
 
@@ -77,7 +86,7 @@ class ReservationController extends AbstractController
     public function edit(Request $request, Reservation $reservation, EntityManagerInterface $em): Response
     {
         if ($reservation->getUtilisateur() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('You do not own this reservation.');
+            throw $this->createAccessDeniedException('No tienes permiso para modificar esta reserva.');
         }
 
         $form = $this->createForm(ReservationType::class, $reservation);
@@ -86,8 +95,15 @@ class ReservationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $diff = $reservation->getDateDebut()->diff($reservation->getDateFin())->days;
             $prixParJour = $reservation->getVehicule()->getPrixParJour();
-            $reservation->setPrixTotal($diff * $prixParJour);
 
+            $prixTotal = $diff * $prixParJour;
+
+            if ($diff > 10) {
+                $prixTotal *= 0.9;
+                $this->addFlash('info', 'Un descuento del 10% ha sido aplicado por una reserva de más de 10 días.');
+            }
+
+            $reservation->setPrixTotal($prixTotal);
             $em->flush();
 
             return $this->redirectToRoute('app_reservation_index');
@@ -104,7 +120,7 @@ class ReservationController extends AbstractController
     public function delete(Request $request, Reservation $reservation, EntityManagerInterface $em): Response
     {
         if ($reservation->getUtilisateur() !== $this->getUser()) {
-            throw $this->createAccessDeniedException('You do not own this reservation.');
+            throw $this->createAccessDeniedException('No puedes eliminar esta reserva.');
         }
 
         if ($this->isCsrfTokenValid('delete' . $reservation->getId(), $request->request->get('_token'))) {

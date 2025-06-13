@@ -38,14 +38,16 @@
                         {% else %}
                             <span class="badge bg-danger">Non</span>
                         {% endif %}
-                    </td>
-                    <td>
-                        {% if vehicule.photo %}
-                            <img src="{{ asset('uploads/image/' ~ vehicule.photo) }}" width="100" alt="photo">
-                        {% else %}
-                            Aucune image
-                        {% endif %}
-                    </td>
+   <td>
+    {% if vehicule.photos is not empty %}
+        {% for photo in vehicule.photos %}
+            <img src="{{ asset('uploads/image/' ~ photo.nom) }}" width="100" alt="photo" class="me-1 mb-1">
+        {% endfor %}
+    {% else %}
+        <em>Aucune image</em>
+    {% endif %}
+</td>
+
                     <td>
                         {% if is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('vehicule_edit', {id: vehicule.id}) }}" class="btn btn-sm btn-primary">Modifier</a>

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tous les commentaires{% endblock %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Liste des commentaires</h1>
+
+        {% if commentaires is empty %}
+            <p>Aucun commentaire pour le moment.</p>
+        {% else %}
+            {% for commentaire in commentaires %}
+                <div class="border rounded p-3 mb-3">
+                    <p><strong>{{ commentaire.auteur.email }}</strong>
+                        <small class="text-muted">{{ commentaire.datePublication|date('d/m/Y H:i') }}</small></p>
+                    <p>{{ commentaire.contenu }}</p>
+                    <p><strong>Note:</strong> {{ commentaire.note }}/5</p>
+                    <p><em>Véhicule:</em> {{ commentaire.vehicule.marque ~ ' ' ~ commentaire.vehicule.modele }}</p>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <form method="post" action="{{ path('commentaire_delete', {'id': commentaire.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?');" class="mt-2">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ commentaire.id) }}">
+                            <button class="btn btn-sm btn-danger">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

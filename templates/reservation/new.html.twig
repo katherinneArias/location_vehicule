@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouvelle réservation{% endblock %}
+{% block title %}Modifier la réservation{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
-    <h1 class="mb-4">Faire une réservation</h1>
+    <h1 class="mb-4">Modifier la réservation</h1>
 
     {{ form_start(form) }}
         <div class="mb-3">
@@ -19,7 +19,61 @@
             {{ form_errors(form.dateFin) }}
         </div>
 
-        <button class="btn btn-primary">Réserver</button>
+        <button class="btn btn-primary">Enregistrer</button>
     {{ form_end(form) }}
+
+    <!-- Mensaje descuento dinámico -->
+    <p id="discount-msg" style="color: green; font-weight: bold;"></p>
+    <p>Prix estimé <span id="prix-estime">0 €</span></p>
+
+    <!-- Flash messages Symfony -->
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label == 'info' ? 'info' : 'success' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
 </div>
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const dateDebutInput = document.querySelector('#reservation_dateDebut');
+            const dateFinInput = document.querySelector('#reservation_dateFin');
+            const prixParJour = {{ reservation.vehicule.prixParJour|default(0) }};
+            const prixEstime = document.getElementById('prix-estime');
+            const discountMsg = document.getElementById('discount-msg');
+
+            function calculerPrix() {
+                const debut = new Date(dateDebutInput.value);
+                const fin = new Date(dateFinInput.value);
+
+                if (!isNaN(debut) && !isNaN(fin) && fin > debut) {
+                    const diffTime = fin - debut;
+                    const jours = diffTime / (1000 * 60 * 60 * 24);
+                    let total = jours * prixParJour;
+
+                    if (jours > 10) {
+                        total *= 0.9;
+                        discountMsg.textContent = "Un descuento del 10% ha sido aplicado por una reserva de más de 10 días.";
+                    } else {
+                        discountMsg.textContent = "";
+                    }
+
+                    prixEstime.textContent = total.toFixed(2) + ' €';
+                } else {
+                    prixEstime.textContent = '0 €';
+                    discountMsg.textContent = "";
+                }
+            }
+
+            dateDebutInput.addEventListener('change', calculerPrix);
+            dateFinInput.addEventListener('change', calculerPrix);
+            calculerPrix(); // Ejecutar al cargar
+        });
+    </script>
+{% endblock %}
+

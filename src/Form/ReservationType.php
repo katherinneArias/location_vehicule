@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Reservation;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -13,16 +14,17 @@ class ReservationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('dateDebut', DateTimeType::class, [
-                'widget' => 'single_text',
-                'label' => 'Date de début',
-            ])
-            ->add('dateFin', DateTimeType::class, [
-                'widget' => 'single_text',
-                'label' => 'Date de fin',
-            ]);
-            // No se incluye 'vehicule' ni 'utilisateur' aquí porque se asignan desde el controlador
-            // Tampoco 'prixTotal', porque se calcula automáticamente
+    ->add('dateDebut', DateTimeType::class, [
+        'widget' => 'single_text',
+        'label' => 'Date de début',
+    ])
+    ->add('dateFin', DateTimeType::class, [
+        'widget' => 'single_text',
+        'label' => 'Date de fin',
+    
+    ]);
+        // Nota: 'vehicule' y 'utilisateur' se asignan desde el controlador.
+        // 'prixTotal' también se calcula automáticamente.
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -6,52 +6,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="icon" href="{{ asset('favicon.ico') }}">
-
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}
 </head>
 <body>
 
-<nav class="main-nav" style="display: flex; justify-content: space-between; align-items: center; background-color: #b20000; padding: 10px; color: white;">
+<nav class="main-nav" style="display: flex; justify-content: space-between; align-items: center; background-color: #b20000; padding: 10px;">
     <!-- Menú Izquierdo -->
     <div style="display: flex; gap: 15px;">
         <a href="{{ path('homepage') }}" style="color: white;">Accueil</a>
+
         <a href="{{ path('vehicule_index') }}" style="color: white;">
-            {% if 'ROLE_ADMIN' in app.user.roles %}
+            {% if app.user and 'ROLE_ADMIN' in app.user.roles %}
                 Gestion Véhicules
             {% else %}
                 Véhicules
             {% endif %}
         </a>
-        <a href="{{ path('app_reservation_index') }}" style="color: white;">
-            {% if 'ROLE_ADMIN' in app.user.roles %}
-                ReservES
-            {% else %}
-                Mes Reservations
-            {% endif %}
-        </a>
-        {# Comentarios: visible para todos los usuarios autenticados #}
-        <a href="#" style="color: white;">Commentaires</a>
+
+        {% if app.user and 'ROLE_CLIENT' in app.user.roles %}
+            <a href="{{ path('app_reservation_index') }}" style="color: white;">Mes Reservations</a>
+        {% elseif app.user and 'ROLE_ADMIN' in app.user.roles %}
+            <a href="{{ path('app_reservation_index') }}" style="color: white;">Réservations</a>
+        {% endif %}
+
+        {% if app.user %}
+            <a href="{{ path('commentaire_index') }}" style="color: white;">Commentaires</a>
+        {% endif %}
+
+        <a href="{{ path('vehicule_disponibles') }}">Disponibilité véhicules</a>
     </div>
 
     <!-- Info Usuario Derecha -->
     <div style="display: flex; gap: 15px; align-items: center;">
         {% if app.user %}
-            <span>
-                Connecte commme <strong>{{ app.user.email }}</strong>
-                (
+            <span style="color: white;">
+                Connecté comme <strong>{{ app.user.email }}</strong>
                 {% if 'ROLE_ADMIN' in app.user.roles %}
-                    Admin
+                    (Administrateur)
                 {% elseif 'ROLE_CLIENT' in app.user.roles %}
-                    Client
+                    (Client)
                 {% endif %}
-                )
             </span>
-            <a href="{{ path('app_logout') }}" style="color: white;">Deconnexion</a>
+            <a href="{{ path('app_logout') }}" style="color: white;">Cerrar sesión</a>
         {% else %}
-            <a href="{{ path('app_login') }}" style="color: white;">Connexion</a>
-            <a href="{{ path('app_register') }}" style="color: white;">Inscription</a>
+            <a href="{{ path('app_login') }}" style="color: white;">Iniciar sesión</a>
+            <a href="{{ path('app_register') }}" style="color: white;">Registrarse</a>
         {% endif %}
     </div>
 </nav>

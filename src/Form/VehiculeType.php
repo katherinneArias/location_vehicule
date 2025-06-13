@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\All;
 
 class VehiculeType extends AbstractType
 {
@@ -31,10 +33,36 @@ class VehiculeType extends AbstractType
                 'input' => 'datetime_immutable',
                 'required' => false,
             ])
+            // 📸 Foto principal
             ->add('photo', FileType::class, [
                 'mapped' => false,
                 'required' => false,
-                'label' => 'Images du véhicule',
+                'label' => 'Image principale',
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
+                        'mimeTypesMessage' => 'Merci de sélectionner une image valide',
+                    ])
+                ]
+            ])
+            // 🖼️ Fotos adicionales
+            ->add('photos', FileType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => 'Photos supplémentaires',
+                'multiple' => true,
+                'constraints' => [
+                  new All([  
+                'constraints' => [
+                    new File([
+                        'maxSize' => '5M',
+                        'mimeTypes' => ['image/jpeg', 'image/png', 'image/webp'],
+                        'mimeTypesMessage' => 'Merci de sélectionner uniquement des images valides',
+                    ])
+                ]
+                              ])
+                ]
             ]);
     }
 

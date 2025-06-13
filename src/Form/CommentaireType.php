@@ -17,19 +17,26 @@ class CommentaireType extends AbstractType
         $builder
             ->add('contenu', TextareaType::class, [
                 'label' => 'Votre commentaire',
-                'attr' => ['rows' => 5, 'placeholder' => 'Écrivez ici votre avis...'],
+                'attr' => [
+                    'rows' => 5,
+                    'placeholder' => 'Écrivez ici votre avis...'
+                ],
                 'required' => true,
             ])
             ->add('note', IntegerType::class, [
                 'label' => 'Note (0 à 5)',
                 'required' => true,
-                'constraints' => [
-                    new Range(['min' => 0, 'max' => 5, 'notInRangeMessage' => 'La note doit être entre 0 et 5.']),
-                ],
                 'attr' => [
                     'min' => 0,
-                    'max' => 5,
+                    'max' => 5
                 ],
+                'constraints' => [
+                    new Range([
+                        'min' => 0,
+                        'max' => 5,
+                        'notInRangeMessage' => 'La note doit être entre 0 et 5.',
+                    ])
+                ]
             ]);
     }
 

@@ -39,6 +39,18 @@ class VehiculeRepository extends ServiceEntityRepository
         }
     }
 
+public function findDisponiblesBetween(\DateTimeInterface $dateDebut, \DateTimeInterface $dateFin): array
+{
+    return $this->createQueryBuilder('v')
+        ->leftJoin('v.reservations', 'r')
+        ->andWhere('r.id IS NULL OR r.dateFin < :dateDebut OR r.dateDebut > :dateFin')
+        ->setParameter('dateDebut', $dateDebut)
+        ->setParameter('dateFin', $dateFin)
+        ->getQuery()
+        ->getResult();
+}
+
+
 //    /**
 //     * @return Vehicule[] Returns an array of Vehicule objects
 //     */
